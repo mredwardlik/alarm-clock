@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="AlarmClock.Core/AlarmClock.Core.csproj" />
+  <Project Path="AlarmClock.Tests/AlarmClock.Tests.csproj" />
+  <Project Path="AlarmClock/AlarmClock.csproj" />
+</Solution>

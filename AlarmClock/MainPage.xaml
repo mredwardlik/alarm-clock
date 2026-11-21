@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:AlarmClock.ViewModels"
+             x:Class="AlarmClock.MainPage"
+             x:DataType="vm:ClockViewModel"
+             BackgroundColor="#E7E9EF">
+
+    <Grid RowDefinitions="*,Auto,*">
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="#D5D8E5" Offset="0" />
+                <GradientStop Color="#E7E9EF" Offset="0.3" />
+                <GradientStop Color="#FFFFFF" Offset="1" />
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <!-- the dial with the seconds badge -->
+        <Grid WidthRequest="260" HeightRequest="260" VerticalOptions="End" HorizontalOptions="Center" Margin="0,40,0,20">
+            <GraphicsView x:Name="Dial" />
+            <Border WidthRequest="34" HeightRequest="28" Padding="0" Margin="104,0,0,0" StrokeThickness="1"
+                    Stroke="#D7DAE6" BackgroundColor="White" StrokeShape="RoundRectangle 6"
+                    HorizontalOptions="Center" VerticalOptions="Center">
+                <Border.Shadow>
+                    <Shadow Brush="#505A82" Opacity="0.18" Radius="8" Offset="0,3" />
+                </Border.Shadow>
+                <Label Text="{Binding Seconds}" FontSize="16" TextColor="#333436"
+                       HorizontalOptions="Center" VerticalOptions="Center" />
+            </Border>
+        </Grid>
+
+        <!-- digital time and what the alarm is doing -->
+        <VerticalStackLayout Grid.Row="1" Spacing="6" HorizontalOptions="Center">
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="6">
+                <Label Text="{Binding Time}" TextColor="#333436" FontSize="72" VerticalOptions="Center"
+                       SemanticProperties.HeadingLevel="Level1" />
+                <Label Text="{Binding Period}" TextColor="#333436" FontSize="20" VerticalOptions="Center" Margin="0,22,0,0" />
+            </HorizontalStackLayout>
+            <Label Text="{Binding Status}" FontSize="15" FontFamily="OpenSansSemibold" TextColor="#333436"
+                   HorizontalOptions="Center" HorizontalTextAlignment="Center" Margin="24,0" />
+        </VerticalStackLayout>
+
+        <!-- alarm settings -->
+        <Border Grid.Row="2" VerticalOptions="Start" HorizontalOptions="Center" WidthRequest="320" Margin="0,30,0,0"
+                Padding="22,14" StrokeThickness="0" BackgroundColor="White" StrokeShape="RoundRectangle 18"
+                IsVisible="{Binding IsRinging, Converter={StaticResource Invert}}">
+            <Border.Shadow>
+                <Shadow Brush="#505A82" Opacity="0.12" Radius="16" Offset="0,6" />
+            </Border.Shadow>
+            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" RowSpacing="4">
+                <Label Text="ALARM" FontSize="12" FontFamily="OpenSansSemibold" TextColor="#9A9DAE" CharacterSpacing="1.5"
+                       VerticalOptions="Center" />
+                <Switch Grid.Column="1" IsToggled="{Binding IsEnabled}" OnColor="#F7A8CC" ThumbColor="#DE0469"
+                        VerticalOptions="Center" SemanticProperties.Description="Alarm on or off" />
+                <TimePicker Grid.Row="1" Grid.ColumnSpan="2" Time="{Binding AlarmTime}" Format="{Binding TimeFormat}"
+                            FontSize="28" TextColor="#333436" HorizontalOptions="Fill"
+                            SemanticProperties.Description="Alarm time" />
+            </Grid>
+        </Border>
+
+        <!-- ringing: swipe to stop or snooze -->
+        <VerticalStackLayout Grid.Row="2" VerticalOptions="Start" HorizontalOptions="Center" Spacing="14" Margin="0,30,0,0"
+                             IsVisible="{Binding IsRinging}">
+            <Label Text="SWIPE TO STOP" TextColor="#333436" FontSize="15" FontFamily="OpenSansSemibold"
+                   HorizontalOptions="Center" CharacterSpacing="1" />
+            <Slider WidthRequest="240" Minimum="0" Maximum="1" Value="{Binding SwipeProgress}"
+                    MinimumTrackColor="#DE0469" MaximumTrackColor="#FFCBE5" ThumbColor="#DE0469"
+                    DragCompletedCommand="{Binding ResetSwipeCommand}"
+                    SemanticProperties.Description="Swipe to stop the alarm" />
+            <Button Text="Snooze 5 min" Command="{Binding SnoozeCommand}" BackgroundColor="Transparent"
+                    TextColor="#DE0469" FontFamily="OpenSansSemibold" FontSize="15" BorderColor="#FFCBE5"
+                    BorderWidth="1" CornerRadius="20" HeightRequest="40" Padding="22,0" HorizontalOptions="Center" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>
